@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+// https://www.youtube.com/watch?v=PBrEq9Wd6_U&t=121s
 import { useState, useEffect } from "react";
 
 const width = 8;
@@ -9,7 +11,6 @@ const candyColors = [
   'red',
   'yellow'
 ];
-
 
 // functional expression. same as function App() {}
 const App = () => {
@@ -27,7 +28,6 @@ const App = () => {
     }
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkForRowOfFour = () => {
     // square with index 47 is the last square we have to check
     for (let i = 0; i < 64; i++) {
@@ -46,7 +46,6 @@ const App = () => {
     }
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkForColumnOfThree = () => {
     // square with index 47 is the last square we have to check
     for (let i = 0; i < 47; i++) {
@@ -63,7 +62,6 @@ const App = () => {
     }
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkForRowOfThree = () => {
     // square with index 47 is the last square we have to check
     for (let i = 0; i < 64; i++) {
@@ -82,6 +80,24 @@ const App = () => {
     }
   };
 
+  const moveIntoSquareBelow = () => {
+    for(let i=0; i < 64 - width; i++) {
+      const firstRow = [0, 1, 2, 3, 4, 5, 6, 7]
+      const isFirstRow = firstRow.includes(i);
+      
+      // if square in first row is blank, fill with random color
+      if (isFirstRow && currentColorArrangement[1] === '') {
+        let randomNumber = Math.floor(Math.random() * candyColors.length)
+        currentColorArrangement[i] = candyColors[randomNumber]
+      }
+      // if the square below the square we are looping equals nothing
+      if ((currentColorArrangement[i + width]) === '') {
+        currentColorArrangement[i + width] = currentColorArrangement[i]
+        currentColorArrangement[i] = ''
+      }
+    }
+
+  }
 
   const createBoard = () => {
     //create an array of 64 random colors
@@ -106,14 +122,15 @@ const App = () => {
     //check board every 100 ms
     const timer = setInterval(() => {
       checkForColumnOfFour();
+      checkForRowOfFour();
       checkForColumnOfThree();
       checkForRowOfThree();
-      checkForRowOfFour();
+      moveIntoSquareBelow();
       //spread operator splits out array
       setCurrentColorArrangement([...currentColorArrangement])
     }, 100)
     return () => clearInterval(timer)
-  }, [checkForColumnOfFour, checkForColumnOfThree, checkForRowOfThree, checkForRowOfFour, currentColorArrangement])
+  }, [checkForColumnOfFour, checkForColumnOfThree, checkForRowOfThree, checkForRowOfFour, moveIntoSquareBelow, currentColorArrangement])
   
   console.log(currentColorArrangement);
 

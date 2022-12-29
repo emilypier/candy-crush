@@ -1,15 +1,23 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // https://www.youtube.com/watch?v=PBrEq9Wd6_U&t=121s
 import { useState, useEffect } from "react";
+import bluePop from './images/blue-pop.png';
+import greenPop from './images/green-pop.png';
+import orangePop from './images/orange-pop.png';
+import purplePop from './images/purple-pop.png';
+import redPop from './images/red-pop.png';
+import yellowPop from './images/yellow-pop.png';
+import blank from './images/blank.png';
+
 
 const width = 8;
 const candyColors = [
-  'blue',
-  'green',
-  'orange',
-  'purple',
-  'red',
-  'yellow'
+  bluePop,
+  greenPop,
+  orangePop,
+  purplePop,
+  redPop,
+  yellowPop
 ];
 
 // functional expression. same as function App() {}
@@ -27,7 +35,7 @@ const App = () => {
       const decidedColor = currentColorArrangement[i];
 
       if (columnOfFour.every(square => currentColorArrangement[square] === decidedColor)) {
-        columnOfFour.forEach(square => currentColorArrangement[square] = '')
+        columnOfFour.forEach(square => currentColorArrangement[square] = blank)
         return true;
       }
     }
@@ -46,7 +54,7 @@ const App = () => {
       if (notValid.includes(i)) continue
 
       if (rowOfFour.every(square => currentColorArrangement[square] === decidedColor)) {
-        rowOfFour.forEach(square => currentColorArrangement[square] = '')
+        rowOfFour.forEach(square => currentColorArrangement[square] = blank)
         return true;
       }
     }
@@ -63,7 +71,7 @@ const App = () => {
       //check if each number has the same color
       if (columnOfThree.every(square => currentColorArrangement[square] === decidedColor)) {
         // replaces color with empty string
-        columnOfThree.forEach(square => currentColorArrangement[square] = '')
+        columnOfThree.forEach(square => currentColorArrangement[square] = blank)
         return true;
       }
     }
@@ -82,7 +90,7 @@ const App = () => {
       if (notValid.includes(i)) continue
 
       if (rowOfThree.every(square => currentColorArrangement[square] === decidedColor)) {
-        rowOfThree.forEach(square => currentColorArrangement[square] = '')
+        rowOfThree.forEach(square => currentColorArrangement[square] = blank)
         return true;
       }
     }
@@ -94,15 +102,15 @@ const App = () => {
       const isFirstRow = firstRow.includes(i);
       
       // if square in first row is blank, fill with random color
-      if (isFirstRow && currentColorArrangement[i] === '') {
+      if (isFirstRow && currentColorArrangement[i] === blank) {
         let randomNumber = Math.floor(Math.random() * candyColors.length)
         currentColorArrangement[i] = candyColors[randomNumber]
       }
 
       // if the square below the square we are looping equals nothing
-      if ((currentColorArrangement[i + width]) === '') {
+      if ((currentColorArrangement[i + width]) === blank) {
         currentColorArrangement[i + width] = currentColorArrangement[i]
-        currentColorArrangement[i] = ''
+        currentColorArrangement[i] = blank
       }
     }
   }
@@ -121,8 +129,8 @@ const App = () => {
     const squareBeingDraggedId = parseInt(squareBeingDragged.getAttribute('data-id'));
 
     //swaps the square being replaced & dragged 
-    currentColorArrangement[squareBeingReplacedId] = squareBeingDragged.style.backgroundColor
-    currentColorArrangement[squareBeingDraggedId] = squareBeingReplaced.style.backgroundColor
+    currentColorArrangement[squareBeingReplacedId] = squareBeingDragged.getAttribute('src')
+    currentColorArrangement[squareBeingDraggedId] = squareBeingReplaced.getAttribute('src')
 
     // only able to swap squares that are next to each other
     const validMoves = [
@@ -149,8 +157,8 @@ const App = () => {
         setSquareBeingReplaced(null)
       } else {
         //changing color back
-        currentColorArrangement[squareBeingReplacedId] = squareBeingReplaced.style.backgroundColor
-        currentColorArrangement[squareBeingDraggedId] = squareBeingDragged.style.backgroundColor
+        currentColorArrangement[squareBeingReplacedId] = squareBeingReplaced.getAttribute('src')
+        currentColorArrangement[squareBeingDraggedId] = squareBeingDragged.getAttribute('src')
         //setting to new current color arrangement
         setCurrentColorArrangement([...currentColorArrangement])
       }
@@ -185,7 +193,7 @@ const App = () => {
       moveIntoSquareBelow();
       //spread operator splits out array
       setCurrentColorArrangement([...currentColorArrangement])
-    }, 100)
+    }, 75)
     return () => clearInterval(timer)
   }, [checkForColumnOfFour, checkForRowOfFour, checkForColumnOfThree, checkForRowOfThree, moveIntoSquareBelow, currentColorArrangement])
   
@@ -198,7 +206,7 @@ const App = () => {
         {currentColorArrangement.map((candyColor, index) => (
           <img
             key={index}
-            style={{backgroundColor: candyColor}}
+            src={candyColor}
             alt={candyColor}
             data-id={index}
             draggable={true}
